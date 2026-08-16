@@ -6,6 +6,7 @@ import streamlit as st
 
 from services.api_client import APIClient
 from services.api_client import APIError
+from utils.theme import apply_theme, hero_banner, badge_row, rank_badge
 
 
 # ============================================================
@@ -17,6 +18,8 @@ st.set_page_config(
     page_icon="🏆",
     layout="wide"
 )
+
+apply_theme()
 
 client = APIClient()
 
@@ -38,9 +41,9 @@ def display_candidate(rank: int, candidate: dict):
 
     with st.container(border=True):
 
-        st.subheader(
-            f"🏅 Rank #{rank}"
-        )
+        rank_badge(rank)
+
+        st.write("")
 
         col1, col2 = st.columns([3, 1])
 
@@ -68,53 +71,35 @@ def display_candidate(rank: int, candidate: dict):
 
         # --------------------------------------------------
 
-        st.write("### ✅ Matched Skills")
+        st.write("##### ✅ Matched Skills")
 
         matched = candidate.get(
             "matched_skills",
             []
         )
 
-        if matched:
-
-            cols = st.columns(3)
-
-            for i, skill in enumerate(matched):
-
-                with cols[i % 3]:
-
-                    st.success(skill)
-
-        else:
-
+        if not badge_row(matched, kind="matched"):
             st.info("No matched skills.")
+
+        st.write("")
 
         # --------------------------------------------------
 
-        st.write("### ❌ Missing Skills")
+        st.write("##### ❌ Missing Skills")
 
         missing = candidate.get(
             "missing_skills",
             []
         )
 
-        if missing:
-
-            cols = st.columns(3)
-
-            for i, skill in enumerate(missing):
-
-                with cols[i % 3]:
-
-                    st.error(skill)
-
-        else:
-
+        if not badge_row(missing, kind="missing"):
             st.success("No missing skills.")
+
+        st.write("")
 
         # --------------------------------------------------
 
-        st.write("### 🚀 Suggestions")
+        st.write("##### 🚀 Suggestions")
 
         suggestions = candidate.get(
             "suggestions",
@@ -138,13 +123,12 @@ def display_candidate(rank: int, candidate: dict):
 # UI
 # ============================================================
 
-st.title("🏆 Recruit Candidate Ranking")
-
-st.write(
+hero_banner(
+    "🏆 Recruit Candidate Ranking",
     "Find the best candidates for a stored job description."
 )
 
-st.divider()
+st.write("")
 
 try:
 
@@ -173,27 +157,29 @@ job_options = {
 
 }
 
-selected_job = st.selectbox(
+with st.container(border=True):
 
-    "Select Job",
+    selected_job = st.selectbox(
 
-    list(job_options.keys())
+        "Select Job",
 
-)
+        list(job_options.keys())
 
-top_k = st.slider(
+    )
 
-    "Top Candidates",
+    top_k = st.slider(
 
-    min_value=1,
+        "Top Candidates",
 
-    max_value=20,
+        min_value=1,
 
-    value=5
+        max_value=20,
 
-)
+        value=5
 
-st.divider()
+    )
+
+st.write("")
 
 if st.button(
 
@@ -252,6 +238,8 @@ if st.button(
                         index,
                         candidate
                     )
+
+                    st.write("")
 
         except APIError as e:
 

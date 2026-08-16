@@ -6,6 +6,7 @@ import streamlit as st
 
 from services.api_client import APIClient
 from services.api_client import APIError
+from utils.theme import apply_theme, hero_banner, section_title, badge_row
 
 
 # ============================================================
@@ -17,6 +18,8 @@ st.set_page_config(
     page_icon="📄",
     layout="wide"
 )
+
+apply_theme()
 
 client = APIClient()
 
@@ -35,82 +38,83 @@ def display_resume(resume: dict):
 
     with col1:
 
-        st.subheader("👤 Candidate")
+        section_title("👤", "Candidate")
 
-        st.write("**Name:**", resume.get("name", "N/A"))
-        st.write("**Email:**", resume.get("email", "N/A"))
-        st.write("**Phone:**", resume.get("phone", "N/A"))
+        with st.container(border=True):
+
+            st.write("**Name:**", resume.get("name", "N/A"))
+            st.write("**Email:**", resume.get("email", "N/A"))
+            st.write("**Phone:**", resume.get("phone", "N/A"))
 
     with col2:
 
-        st.subheader("🎯 Skills")
+        section_title("🎯", "Skills")
 
         skills = resume.get("skills", [])
 
-        if skills:
+        with st.container(border=True):
 
-            for skill in skills:
-                st.success(skill)
-
-        else:
-            st.info("No skills found.")
+            if not badge_row(skills, kind="neutral"):
+                st.info("No skills found.")
 
     st.divider()
 
     # ----------------------------------------------------
 
-    st.subheader("🎓 Education")
+    section_title("🎓", "Education")
 
     education = resume.get("education", [])
 
     if education:
         for edu in education:
 
-            st.markdown(f"### 🎓 {edu.get('degree','')}")
+            with st.container(border=True):
 
-            st.write(f"**College:** {edu.get('college','')}")
+                st.markdown(f"#### 🎓 {edu.get('degree','')}")
 
-            st.write(f"**Year:** {edu.get('year','')}")
+                st.write(f"**College:** {edu.get('college','')}")
 
-            st.divider()
+                st.write(f"**Year:** {edu.get('year','')}")
 
-       
-            
+            st.write("")
 
     else:
         st.info("No education found.")
 
     # ----------------------------------------------------
 
-    st.subheader("💼 Experience")
+    section_title("💼", "Experience")
 
     experience = resume.get("experience", [])
 
     if experience:
 
-        for item in experience:
-            st.write("•", item)
+        with st.container(border=True):
+
+            for item in experience:
+                st.write("•", item)
 
     else:
         st.info("No experience found.")
 
+    st.write("")
+
     # ----------------------------------------------------
 
-    st.subheader("📂 Projects")
+    section_title("📂", "Projects")
 
     projects = resume.get("projects", [])
 
     if projects:
         for project in projects:
 
-            st.markdown(f"### 📁 {project.get('title','')}")
+            with st.container(border=True):
 
-            st.write(project.get("description",""))
+                st.markdown(f"#### 📁 {project.get('title','')}")
 
-            st.divider()
+                st.write(project.get("description",""))
 
-        
-            
+            st.write("")
 
     else:
         st.info("No projects found.")
@@ -120,14 +124,12 @@ def display_resume(resume: dict):
 # UI
 # ============================================================
 
-st.title("📄 Upload Resume")
-
-st.write(
-    "Upload a PDF or DOCX resume. "
-    "The backend will parse it using OpenAI and store it in the database."
+hero_banner(
+    "📄 Upload Resume",
+    "Upload a PDF or DOCX resume. The backend will parse it using OpenAI and store it in the database."
 )
 
-st.divider()
+st.write("")
 
 uploaded_file = st.file_uploader(
 

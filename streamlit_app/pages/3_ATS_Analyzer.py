@@ -6,6 +6,7 @@ import streamlit as st
 
 from services.api_client import APIClient
 from services.api_client import APIError
+from utils.theme import apply_theme, hero_banner, section_title, badge_row
 
 
 # ============================================================
@@ -18,6 +19,8 @@ st.set_page_config(
     layout="wide"
 )
 
+apply_theme()
+
 client = APIClient()
 
 
@@ -25,7 +28,7 @@ client = APIClient()
 # Load Data
 # ============================================================
 
-@st.cache_data
+
 def load_data():
 
     resumes = client.get_all_resumes()
@@ -47,74 +50,59 @@ def display_report(report: dict):
 
     score = report.get("score", 0)
 
-    col1, col2 = st.columns([1, 3])
+    with st.container(border=True):
 
-    with col1:
+        col1, col2 = st.columns([1, 3])
 
-        st.metric(
-            "ATS Score",
-            f"{score}%"
-        )
+        with col1:
 
-    with col2:
+            st.metric(
+                "ATS Score",
+                f"{score}%"
+            )
 
-        st.progress(score / 100)
+        with col2:
+
+            st.write("")
+            st.progress(score / 100)
 
     st.divider()
 
     # ----------------------------------------------------
 
-    st.subheader("✅ Matched Skills")
+    section_title("✅", "Matched Skills")
 
     matched = report.get(
         "matched_skills",
         []
     )
 
-    if matched:
+    with st.container(border=True):
 
-        cols = st.columns(3)
-
-        for i, skill in enumerate(matched):
-
-            with cols[i % 3]:
-
-                st.success(skill)
-
-    else:
-
-        st.info("No matched skills.")
+        if not badge_row(matched, kind="matched"):
+            st.info("No matched skills.")
 
     # ----------------------------------------------------
 
     st.divider()
 
-    st.subheader("❌ Missing Skills")
+    section_title("❌", "Missing Skills")
 
     missing = report.get(
         "missing_skills",
         []
     )
 
-    if missing:
+    with st.container(border=True):
 
-        cols = st.columns(3)
-
-        for i, skill in enumerate(missing):
-
-            with cols[i % 3]:
-
-                st.error(skill)
-
-    else:
-
-        st.success("No missing skills.")
+        if not badge_row(missing, kind="missing"):
+            st.success("No missing skills.")
 
     # ----------------------------------------------------
 
     st.divider()
 
-    st.subheader("💪 Strengths")
+    section_title("💪", "Strengths")
 
     strengths = report.get(
         "strengths",
@@ -123,9 +111,11 @@ def display_report(report: dict):
 
     if strengths:
 
-        for item in strengths:
+        with st.container(border=True):
 
-            st.success(item)
+            for item in strengths:
+
+                st.success(item)
 
     else:
 
@@ -135,7 +125,7 @@ def display_report(report: dict):
 
     st.divider()
 
-    st.subheader("⚠ Weaknesses")
+    section_title("⚠", "Weaknesses")
 
     weaknesses = report.get(
         "weaknesses",
@@ -144,9 +134,11 @@ def display_report(report: dict):
 
     if weaknesses:
 
-        for item in weaknesses:
+        with st.container(border=True):
 
-            st.warning(item)
+            for item in weaknesses:
+
+                st.warning(item)
 
     else:
 
@@ -156,7 +148,7 @@ def display_report(report: dict):
 
     st.divider()
 
-    st.subheader("🚀 Suggestions")
+    section_title("🚀", "Suggestions")
 
     suggestions = report.get(
         "suggestions",
@@ -165,9 +157,11 @@ def display_report(report: dict):
 
     if suggestions:
 
-        for item in suggestions:
+        with st.container(border=True):
 
-            st.info(item)
+            for item in suggestions:
+
+                st.info(item)
 
     else:
 
@@ -178,13 +172,12 @@ def display_report(report: dict):
 # Main Page
 # ============================================================
 
-st.title("📊 ATS Resume Analyzer")
-
-st.write(
+hero_banner(
+    "📊 ATS Resume Analyzer",
     "Compare a stored resume against a stored job description."
 )
 
-st.divider()
+st.write("")
 
 
 try:
@@ -228,30 +221,32 @@ job_options = {
 }
 
 
-col1, col2 = st.columns(2)
+with st.container(border=True):
 
-with col1:
+    col1, col2 = st.columns(2)
 
-    selected_resume = st.selectbox(
+    with col1:
 
-        "Select Resume",
+        selected_resume = st.selectbox(
 
-        options=list(resume_options.keys())
+            "Select Resume",
 
-    )
+            options=list(resume_options.keys())
 
-with col2:
+        )
 
-    selected_job = st.selectbox(
+    with col2:
 
-        "Select Job",
+        selected_job = st.selectbox(
 
-        options=list(job_options.keys())
+            "Select Job",
 
-    )
+            options=list(job_options.keys())
+
+        )
 
 
-st.divider()
+st.write("")
 
 
 if st.button(

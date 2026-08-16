@@ -1,0 +1,11 @@
+ requirements.txt                         | Bin [31m2552[m -> [32m2580[m bytes
+ streamlit_app/.streamlit/config.toml     |  10 [32m+[m[31m-[m
+ streamlit_app/app.py                     |  64 [32m++[m[31m--[m
+ streamlit_app/pages/1_Upload_Resume.py   |  68 [32m++[m[31m--[m
+ streamlit_app/pages/2_Create_Job.py      |  76 [32m++[m[31m---[m
+ streamlit_app/pages/3_ATS_Analyzer.py    | 115 [32m++++[m[31m---[m
+ streamlit_app/pages/4_Semantic_Search.py |  46 [32m+[m[31m--[m
+ streamlit_app/pages/5_Recruit_Ranking.py |  78 [32m++[m[31m---[m
+ streamlit_app/services/api_client.py     |   8 [32m+[m[31m-[m
+ streamlit_app/utils/theme.py             | 530 [32m+++++++++++++++++++++++++++++++[m
+ 10 files changed, 743 insertions(+), 252 deletions(-)

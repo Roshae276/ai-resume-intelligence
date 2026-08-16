@@ -6,6 +6,7 @@ import streamlit as st
 
 from services.api_client import APIClient
 from services.api_client import APIError
+from utils.theme import apply_theme, hero_banner, badge_row
 
 
 st.set_page_config(
@@ -13,6 +14,8 @@ st.set_page_config(
     page_icon="🔍",
     layout="wide"
 )
+
+apply_theme()
 
 client = APIClient()
 
@@ -65,15 +68,9 @@ def display_result(result):
 
         if skills:
 
-            st.write("### Skills")
+            st.write("##### Skills")
 
-            cols = st.columns(4)
-
-            for i, skill in enumerate(skills):
-
-                with cols[i % 4]:
-
-                    st.success(skill)
+            badge_row(skills, kind="neutral")
 
         education = resume_json.get(
             "education",
@@ -135,27 +132,28 @@ def display_result(result):
                     st.divider()
 
 
-st.title("🔍 Semantic Resume Search")
-
-st.write(
+hero_banner(
+    "🔍 Semantic Resume Search",
     "Search resumes using semantic similarity."
 )
 
-st.divider()
+st.write("")
 
-query = st.text_input(
-    "Search Query",
-    placeholder="Python FastAPI Docker"
-)
+with st.container(border=True):
 
-top_k = st.slider(
-    "Number of Results",
-    1,
-    20,
-    5
-)
+    query = st.text_input(
+        "Search Query",
+        placeholder="Python FastAPI Docker"
+    )
 
-st.divider()
+    top_k = st.slider(
+        "Number of Results",
+        1,
+        20,
+        5
+    )
+
+st.write("")
 
 if st.button(
     "🔍 Search",
@@ -200,6 +198,8 @@ if st.button(
                 for result in results:
 
                     display_result(result)
+
+                    st.write("")
 
         except APIError as e:
 

@@ -6,6 +6,7 @@ import streamlit as st
 
 from services.api_client import APIClient
 from services.api_client import APIError
+from utils.theme import apply_theme, hero_banner, section_title, badge_row
 
 
 # ============================================================
@@ -17,6 +18,8 @@ st.set_page_config(
     page_icon="💼",
     layout="wide"
 )
+
+apply_theme()
 
 client = APIClient()
 
@@ -31,69 +34,60 @@ def display_job(job: dict):
 
     st.divider()
 
-    st.subheader("💼 Job Title")
+    section_title("💼", "Job Title")
 
-    st.write(job.get("job_title", "N/A"))
+    st.markdown(f"### {job.get('job_title', 'N/A')}")
 
     st.divider()
 
     # ----------------------------------------------------
 
-    st.subheader("🛠 Required Skills")
+    section_title("🛠", "Required Skills")
 
     skills = job.get("skills", [])
 
-    if skills:
+    with st.container(border=True):
 
-        cols = st.columns(3)
-
-        for index, skill in enumerate(skills):
-
-            with cols[index % 3]:
-
-                st.success(skill)
-
-    else:
-
-        st.info("No skills found.")
+        if not badge_row(skills, kind="neutral"):
+            st.info("No skills found.")
 
     # ----------------------------------------------------
 
     st.divider()
 
-    st.subheader("💼 Experience")
+    col1, col2 = st.columns(2)
 
-    experience = job.get("experience", "")
+    with col1:
 
-    if experience:
+        section_title("💼", "Experience")
 
-        st.write(experience)
+        experience = job.get("experience", "")
 
-    else:
+        with st.container(border=True):
 
-        st.info("Not specified.")
+            if experience:
+                st.write(experience)
+            else:
+                st.info("Not specified.")
+
+    with col2:
+
+        section_title("🎓", "Education")
+
+        education = job.get("education", "")
+
+        with st.container(border=True):
+
+            if education:
+                st.write(education)
+            else:
+                st.info("Not specified.")
 
     # ----------------------------------------------------
 
     st.divider()
 
-    st.subheader("🎓 Education")
-
-    education = job.get("education", "")
-
-    if education:
-
-        st.write(education)
-
-    else:
-
-        st.info("Not specified.")
-
-    # ----------------------------------------------------
-
-    st.divider()
-
-    st.subheader("📋 Responsibilities")
+    section_title("📋", "Responsibilities")
 
     responsibilities = job.get(
         "responsibilities",
@@ -102,9 +96,11 @@ def display_job(job: dict):
 
     if responsibilities:
 
-        for responsibility in responsibilities:
+        with st.container(border=True):
 
-            st.write("•", responsibility)
+            for responsibility in responsibilities:
+
+                st.write("•", responsibility)
 
     else:
 
@@ -115,14 +111,12 @@ def display_job(job: dict):
 # UI
 # ============================================================
 
-st.title("💼 Create Job")
-
-st.write(
-    "Paste a Job Description. "
-    "The backend will parse it using OpenAI."
+hero_banner(
+    "💼 Create Job",
+    "Paste a Job Description. The backend will parse it using OpenAI."
 )
 
-st.divider()
+st.write("")
 
 job_description = st.text_area(
     "Paste Job Description",

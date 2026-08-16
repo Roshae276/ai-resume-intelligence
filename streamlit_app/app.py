@@ -7,6 +7,7 @@ import streamlit as st
 
 from services.api_client import APIClient
 from services.api_client import APIError
+from utils.theme import apply_theme, hero_banner, section_title, feature_card, app_footer
 
 
 # ============================================================
@@ -19,6 +20,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+apply_theme()
 
 client = APIClient()
 
@@ -53,13 +56,12 @@ def load_dashboard_data():
 # Header
 # ============================================================
 
-st.title("🤖 AI Resume Intelligence Platform")
-
-st.caption(
+hero_banner(
+    "🤖 AI Resume Intelligence Platform",
     "An AI-powered recruitment system using FastAPI, OpenAI, Qdrant and Streamlit."
 )
 
-st.divider()
+st.write("")
 
 
 # ============================================================
@@ -105,54 +107,36 @@ st.divider()
 # Project Overview
 # ============================================================
 
-st.subheader("🚀 Features")
+section_title("🚀", "Features")
 
 col1, col2 = st.columns(2)
 
 with col1:
 
-    st.info(
-        """
-### 📄 Resume Management
-
-- Upload Resume
-- Resume Parsing
-- Resume Database
-"""
+    feature_card(
+        "📄 Resume Management",
+        ["Upload Resume", "Resume Parsing", "Resume Database"]
     )
 
-    st.info(
-        """
-### 💼 Job Management
+    st.write("")
 
-- Parse Job Description
-- Store Jobs
-- Job Database
-"""
+    feature_card(
+        "💼 Job Management",
+        ["Parse Job Description", "Store Jobs", "Job Database"]
     )
 
 with col2:
 
-    st.info(
-        """
-### 📊 AI Features
-
-- ATS Evaluation
-- Semantic Search
-- Recruit Ranking
-"""
+    feature_card(
+        "📊 AI Features",
+        ["ATS Evaluation", "Semantic Search", "Recruit Ranking"]
     )
 
-    st.info(
-        """
-### ⚙ Technology Stack
+    st.write("")
 
-- FastAPI
-- OpenAI
-- LangChain
-- Qdrant
-- SQLAlchemy
-"""
+    feature_card(
+        "⚙ Technology Stack",
+        ["FastAPI", "OpenAI", "Qdrant", "SQLAlchemy"]
     )
 
 
@@ -163,7 +147,7 @@ st.divider()
 # Navigation
 # ============================================================
 
-st.subheader("🧭 Navigate")
+section_title("🧭", "Navigate")
 
 col1, col2, col3 = st.columns(3)
 
@@ -211,6 +195,4 @@ st.divider()
 # Footer
 # ============================================================
 
-st.caption(
-    "Built using FastAPI • OpenAI • LangChain • Qdrant • Streamlit"
-)
+app_footer("Built using FastAPI • OpenAI • Qdrant • Streamlit")
