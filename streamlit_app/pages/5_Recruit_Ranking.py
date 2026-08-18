@@ -28,7 +28,7 @@ client = APIClient()
 # Load Jobs
 # ============================================================
 
-@st.cache_data
+
 def load_jobs():
     return client.get_all_jobs()
 
@@ -133,7 +133,7 @@ st.write("")
 try:
 
     jobs = load_jobs()
-    st.write("DEBUG:", jobs)
+    
 
 except APIError as e:
 
