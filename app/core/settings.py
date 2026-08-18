@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str
     DATABASE_URL:str
     QDRANT_URL: str
+    QDRANT_API_KEY: str
 
     QDRANT_COLLECTION: str
 

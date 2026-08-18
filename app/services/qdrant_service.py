@@ -12,7 +12,8 @@ class QdrantService:
     def __init__(self):
 
         self.client = QdrantClient(
-            url=settings.QDRANT_URL
+            url=settings.QDRANT_URL,
+            api_key=settings.QDRANT_API_KEY
         )
 
     def create_collection(self):
