@@ -133,6 +133,7 @@ st.write("")
 try:
 
     jobs = load_jobs()
+    st.write("DEBUG:", jobs)
 
 except APIError as e:
 
