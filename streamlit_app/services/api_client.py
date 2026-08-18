@@ -263,7 +263,7 @@ class APIClient:
 
         return self._post(
 
-            "/api/v1/recruit/search/",
+            "/api/v1/recruit/search",
 
             json={
                 "job_id": job_id,
